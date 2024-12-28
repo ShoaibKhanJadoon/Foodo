@@ -36,7 +36,7 @@ const RestaurantSignUp = () => {
             setPassword_Error(false)
         }
         
-        let response=await fetch("http://localhost:3000/api/restaurant",{
+        let response=await fetch("/api/restaurant",{
             method:"POST",
             body:JSON.stringify({email, password, name, city, address, contact})
         })
@@ -49,6 +49,9 @@ const RestaurantSignUp = () => {
             delete result.password
             localStorage.setItem("restaurantUser",JSON.stringify(result))
             router.push("/restaurant/dashboard")
+        }
+        else{
+            alert(response.result)
         }
     }
 

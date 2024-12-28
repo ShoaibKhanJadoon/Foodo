@@ -1,7 +1,9 @@
 
+import { useRouter } from 'next/navigation';
 import { useEffect, useState } from "react";
 
 const FoodItemList = () => {
+    const router = useRouter()
     const [foodItems, setFoodItems] = useState([]);
     useEffect(() => {
         handleFoodItem();
@@ -9,14 +11,26 @@ const FoodItemList = () => {
     const handleFoodItem = async () => {
         const userData = JSON.parse(localStorage.getItem("restaurantUser"));
         const id = userData._id
-        let response = await fetch("http://localhost:3000/api/restaurant/foods/"+id)
+        let response = await fetch("/api/restaurant/foods/"+id)
         response = await response.json()
         if (response.success) {
             setFoodItems(response.result)
             console.log(response.result)
         }
         console.log(foodItems)
-
+    }
+    const handleDeleteItems =async (id) =>{
+        let response = await fetch("/api/restaurant/foods/"+id,{
+            method:"DELETE"
+        
+        }) 
+        response =await response.json()
+        if(response.success){
+            handleFoodItem()
+        }
+        else{
+            alert("food item not deleted")
+        }
     }
 
     return (
@@ -46,10 +60,10 @@ const FoodItemList = () => {
                                     <img src={foodItem.img_path} alt={foodItem.name} className="h-10 w-10 object-cover" />
                                 </td>
                                 <td className="p-1 border-2 border-black">
-                                    <button className="m-1 bg-blue-500 hover:bg-blue-700 px-2 py-1 rounded-lg">
+                                    <button onClick={()=>router.push("dashboard/"+foodItem._id)} className="m-1 bg-blue-500 hover:bg-blue-700 px-2 py-1 rounded-lg">
                                         Edit
                                     </button>
-                                    <button className="m-1 bg-red-500 hover:bg-red-700 px-2 py-1 rounded-lg">
+                                    <button onClick={()=>handleDeleteItems(foodItem._id)} className="m-1 bg-red-500 hover:bg-red-700 px-2 py-1 rounded-lg">
                                         Delete
                                     </button>
                                 </td>
