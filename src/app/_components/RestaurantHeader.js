@@ -35,7 +35,7 @@ const RestaurantHeader = () => {
                 </div>
                 <ul className="flex justify-evenly gap-4 mr-12">
                     <li>
-                        <Link href={"/"}>Home</Link>
+                        <Link  href={"/"}>Home</Link>
                     </li>
                     {
                         detail && detail.name ?

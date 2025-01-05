@@ -20,6 +20,13 @@ const FoodItemList = () => {
         console.log(foodItems)
     }
     const handleDeleteItems =async (id) =>{
+        const userConfirmed = window.confirm("Are you sure you want to delete this food item?");
+
+        if (!userConfirmed) {
+            return; // Exit if the user cancels
+        }
+
+
         let response = await fetch("/api/restaurant/foods/"+id,{
             method:"DELETE"
         
