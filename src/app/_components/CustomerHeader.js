@@ -1,10 +1,11 @@
 "use client"
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const CustomerHeader = ({ cartData, removeCartData }) => {
-
+    const router = useRouter()
     const [userStorage, setUserStorage] = useState();
     const [cartNumber, setCartNumber] = useState(0)
     const [cartItem, setCartItem] = useState([])
@@ -12,14 +13,13 @@ const CustomerHeader = ({ cartData, removeCartData }) => {
     useEffect(() => {
         const user = localStorage.getItem("user")
         const parsedUser = JSON.parse(user)
-        console.log(parsedUser)
         setUserStorage(parsedUser)
-
     }, [])
 
     useEffect(() => {
         if (typeof window !== 'undefined') {
-            if (removeCartData) {
+            if (removeCartData && typeof removeCartData === "string") {
+                
                 let localCartItem = cartItem.filter((item) => {
                     return item._id != removeCartData
                 })
@@ -30,10 +30,14 @@ const CustomerHeader = ({ cartData, removeCartData }) => {
                 if (localCartItem.length == 0) {
                     localStorage.removeItem('cart')
                 }
-
+            }else if(typeof removeCartData === "boolean" && removeCartData){
+                setCartItem([])
+                setCartNumber(0)
+                localStorage.removeItem("cart")
             }
         }
     }, [removeCartData])
+
     useEffect(() => {
         if (typeof window !== "undefined") {
 
@@ -73,6 +77,7 @@ const CustomerHeader = ({ cartData, removeCartData }) => {
     const Logout = () =>{
     localStorage.removeItem("user")
     setUserStorage(null)
+    router.push('/')
 
     }
 
@@ -90,7 +95,7 @@ const CustomerHeader = ({ cartData, removeCartData }) => {
                     userStorage ?
                         <>
                             <li  className="cursor-pointer m-0 bg-black text-white px-4 py-2 hover:text-black hover:bg-white rounded-lg transition duration-500">
-                                <Link href={"#"}>{userStorage?.name}</Link>
+                                <Link href={"/myprofile"}>{userStorage?.name}</Link>
                             </li>
                             <li className="cursor-pointer bg-black text-white px-4 py-2 hover:text-black hover:bg-white rounded-lg transition duration-500">
                                 <button  onClick={Logout}>Logout</button>
@@ -111,6 +116,10 @@ const CustomerHeader = ({ cartData, removeCartData }) => {
                 </li>
                 <li className="cursor-pointer bg-black text-white px-4 py-2 hover:text-black hover:bg-white rounded-lg transition duration-500">
                     <Link  href={"/restaurant"}>Add Restaurant</Link>
+                    
+                </li>
+                <li className="cursor-pointer bg-black text-white px-4 py-2 hover:text-black hover:bg-white rounded-lg transition duration-500">
+                    <Link  href={"/deliverypartner"}>Delivery Partner</Link>
                     
                 </li>
 

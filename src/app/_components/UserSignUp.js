@@ -1,7 +1,7 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-const UserSignUp = () => {
+const UserSignUp = ({redirect}) => {
     const [name, setName] = useState("")
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
@@ -20,7 +20,7 @@ const UserSignUp = () => {
             return false;
         }
         else{
-            setError(true)
+            setError(false)
         }
         //password confirmation
         if(password != confirmPassword){
@@ -39,7 +39,11 @@ const UserSignUp = () => {
         if(response.success){
             const {result} = response;
             localStorage.setItem('user',JSON.stringify(result))
-            router.push("/")
+            if(redirect?.order){
+                router.push("/order")
+            }else{
+                router.push("/")
+            }
         }else{
             alert(response.result)
         }

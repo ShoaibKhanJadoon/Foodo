@@ -1,7 +1,7 @@
 import { useRouter } from "next/navigation"
 import { useState } from "react"
 
-const Login = () => {
+const Login = ({redirect}) => {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [error, setError] = useState(false)
@@ -12,21 +12,26 @@ const Login = () => {
             return false;
         }
         else {
-            setError(true)
-        }
-        let response = await fetch("/api/user/login",{
-            method:"POST",
-            body:JSON.stringify({email,password})
-        })
-        response=await response.json()
-        if(response.success){
-            const {result} = response;
-            localStorage.setItem('user',JSON.stringify(result))
-            alert("Login Successful")
-            router.push("/")
-        }else{
-            alert("failed to login. Please Correct Email or Password")
-        }
+            setError(false)
+            let response = await fetch("/api/user/login",{
+                method:"POST",
+                body:JSON.stringify({email,password})
+            })
+            response=await response.json()
+            if(response.success){
+                const {result} = response;
+                localStorage.setItem('user',JSON.stringify(result))
+                alert("Login Successful")
+                if(redirect?.order){
+                    router.push("/order")
+                }else{
+                    router.push("/")
+                }
+                
+            }else{
+                alert("failed to login. Please Correct Email or Password")
+            }
+        }     
     }
     return (
         <div className="relative top-16 p-4">

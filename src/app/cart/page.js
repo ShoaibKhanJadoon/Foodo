@@ -3,13 +3,14 @@ import { useEffect, useState } from "react"
 import CustomerHeader from "../_components/CustomerHeader"
 import Footer from "../_components/Footer"
 import { DELIVERY_CHARGES, TAX } from "../lib/constant"
+import { useRouter } from "next/navigation"
 
 const page = () => {
     const [cartStorage, setCartStorage] = useState([])
     const [total,setTotal] = useState(0)
     const [removeCartData, setRemoveCartData] = useState();
     const [cartData, setCartData] = useState()
-    
+    const router = useRouter() 
 
 
     useEffect(() => {
@@ -34,6 +35,14 @@ const page = () => {
         const updatedCart = cartStorage.filter((item) => item._id !== id);
         setCartStorage(updatedCart);
     };
+
+    const orderNow=()=>{
+        if(JSON.parse(localStorage.getItem("user"))){
+        router.push("/order")
+        }else{
+            router.push("/user-auth?flag=true&order=true")
+        }
+    }
     return (
         <div >
             <CustomerHeader cartData={cartData}  removeCartData={removeCartData} />
@@ -73,7 +82,7 @@ const page = () => {
                         <div className="flex items-center gap-4 justify-between">
                             <span>Total Amount:</span><span>{total+(total == 0 ?"0": DELIVERY_CHARGES)+(total*TAX)/100}</span>
                         </div>
-                        <button onClick={() => removeFromCart(food._id)} className="bg-orange-400 hover:bg-orange-500 px-4 py-2 mt-6 rounded-lg">Order Now</button>
+                        <button onClick={() => orderNow()} className="bg-orange-400 hover:bg-orange-500 px-4 py-2 mt-6 rounded-lg">Order Now</button>
                     </div>
 
                 </div>
